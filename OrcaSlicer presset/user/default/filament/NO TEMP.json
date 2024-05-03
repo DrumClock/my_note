@@ -1,0 +1,46 @@
+{
+    "fan_max_speed": [
+        "100"
+    ],
+    "fan_min_speed": [
+        "50"
+    ],
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "filament_settings_id": [
+        "NO TEMP"
+    ],
+    "filament_type": [
+        "NO TEMP"
+    ],
+    "from": "User",
+    "hot_plate_temp": [
+        "0"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "0"
+    ],
+    "inherits": "My Generic PETG",
+    "is_custom_defined": "0",
+    "name": "NO TEMP",
+    "nozzle_temperature": [
+        "0"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "0"
+    ],
+    "nozzle_temperature_range_high": [
+        "0"
+    ],
+    "nozzle_temperature_range_low": [
+        "0"
+    ],
+    "slow_down_layer_time": [
+        "3"
+    ],
+    "slow_down_min_speed": [
+        "60"
+    ],
+    "version": "1.8.0.0"
+}

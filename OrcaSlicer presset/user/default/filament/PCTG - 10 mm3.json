@@ -1,0 +1,43 @@
+{
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "fan_max_speed": [
+        "100"
+    ],
+    "fan_min_speed": [
+        "50"
+    ],
+    "filament_cost": [
+        "650"
+    ],
+    "filament_flow_ratio": [
+        "1"
+    ],
+    "filament_settings_id": [
+        "PCTG - 10 mm3"
+    ],
+    "filament_type": [
+        "PCTG"
+    ],
+    "from": "User",
+    "inherits": "My Generic PETG",
+    "is_custom_defined": "0",
+    "name": "PCTG - 10 mm3",
+    "nozzle_temperature": [
+        "260"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "260"
+    ],
+    "nozzle_temperature_range_high": [
+        "270"
+    ],
+    "pressure_advance": [
+        "0.052"
+    ],
+    "slow_down_layer_time": [
+        "3"
+    ],
+    "version": "1.8.0.0"
+}

@@ -1,0 +1,34 @@
+{
+    "fan_max_speed": [
+        "100"
+    ],
+    "fan_min_speed": [
+        "50"
+    ],
+    "filament_cost": [
+        "600"
+    ],
+    "filament_settings_id": [
+        "Leapgrog_BOLT_Pro - PETG 10mm3 extr.chlazeni"
+    ],
+    "from": "User",
+    "hot_plate_temp": [
+        "70"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "70"
+    ],
+    "inherits": "My Generic PETG",
+    "is_custom_defined": "0",
+    "name": "Leapgrog_BOLT_Pro - PETG 10mm3 extr.chlazeni",
+    "nozzle_temperature": [
+        "235"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "235"
+    ],
+    "slow_down_layer_time": [
+        "20"
+    ],
+    "version": "1.8.0.0"
+}

@@ -1,0 +1,66 @@
+{
+    "before_layer_change_gcode": "{if layer_num == 1};\nM221 S100 ;flow 100%\nSET_FILAMENT_SENSOR SENSOR=extruder ENABLE=1\n{endif}\n\nG92 E0.0\n",
+    "fan_kickstart": "3",
+    "fan_speedup_time": "3",
+    "from": "User",
+    "inherits": "MyKlipper 0.4 nozzle",
+    "is_custom_defined": "0",
+    "layer_change_gcode": ";M117 Layer {layer_num+1}/{layer_z}\nM117 ~layer~ {layer_num+1} ~height~ {layer_z}",
+    "machine_end_gcode": "G92 E1.5\nG1 F2700.000 E-1.50000\n\n; ----- osa Z +15 mm relativne ----\n\nG91 ;use relative coordinates\nG1 Z15 ; Nozzle +15mm from possition\nG90 ;use absolute coordinates\n; -----------------------------------------\n\nG1 Y0 ; home Y\nG1 X150 F3000 ; X on 150mm\n\nM140 S0    ; turn off heatbed\n\n; ---- cistit E1 30 mm -----\nG92 E0\nG1 E30 F270\nM400\nG4 P5000\n\n; --- start pozice ----\nG1 X100 Y310 F3000\n;M109 T0 R50 ; wait for cooling E1\n\n; ---- zchladit  ------\nM140 S0    ; turn off heatbed\nM104 S0 T0 ; turn off nozzle E1\nM104 S0 T1\n   \n; ------ vypnout motory -----\nG1 Z15\nM84     ; disable motors\n\n; ---- Turn Off ----\nM81 ; power off\n",
+    "machine_max_acceleration_e": [
+        "1000",
+        "5000"
+    ],
+    "machine_max_acceleration_extruding": [
+        "5000",
+        "20000"
+    ],
+    "machine_max_acceleration_retracting": [
+        "1000",
+        "5000"
+    ],
+    "machine_max_acceleration_x": [
+        "3000",
+        "20000"
+    ],
+    "machine_max_acceleration_y": [
+        "3000",
+        "20000"
+    ],
+    "machine_max_acceleration_z": [
+        "50",
+        "200"
+    ],
+    "machine_max_speed_x": [
+        "600",
+        "200"
+    ],
+    "machine_max_speed_y": [
+        "600",
+        "200"
+    ],
+    "machine_start_gcode": "; **********************************************************\nG21 ; set units to millimeters\nG90 ; use absolute coordinates\nM82 ; use absolute distances for extrusion\n\n; ----- nahrati tiskove podlozky  ------\nM190 S[bed_temperature] ; Wait till the Bed is heated\n\nG28 ; home all axes\n\n\n; ----- adaptivni bed mesh  jen v oblasti tisku  ------\nBED_MESH_CALIBRATE  ADAPTIVE=1\n\n\nG0 X{first_layer_print_min[0]} Y{max(0, first_layer_print_min[1] - 3)} Z5 F12000\n; ---- G1 X10 Y10 Z5 F6000 ; Nozzle on 5mm possition\n\n; ----- temperovani na 180 -------\nM104 S0 T1 ; wait temperature nozzle \nM109 S180 T0 ; wait temperature nozzle \nG1 Z0 F3000\n\n;  ----- nahrati na teplotu tisku  ---------\nM109 S[nozzle_temperature] T0 ; wait temperature nozzle \n\n; --- Start of print ----\nG21 ; metric values\nG90 ; absolute positioning\nM83 ; extruder relative mode\n\n; --- Prepare nozzle + intro line ----\n;G1 Z0.300 F11000\n;G1 Y0 X0 F11000 ; go on start position\n;G1 X3 E5 F500.0 ; go on start position\n;G92 E0 ; Set extrusion distance to 0\n;G1 Y60 E9.0  F800 ; intro line\n;G1 Z0.400 F10000\n;G1 Y120 E15  F800 ; intro line\n;G92 E0 ; Set extrusion distance to 0\n;G90 ; switch back to absolute mode\n\nSET_FILAMENT_SENSOR SENSOR=extruder ENABLE=0\n\n;G0 Z5 F1200\n;G0 X{first_layer_print_min[0]} Y{max(0, first_layer_print_min[1] - 3)} F12000\nG0 Z0.2 F600\nG1 E3 F1800\nG0 Z0.3 F600\nG1 X{min(first_layer_print_min[0] + 30,print_bed_max[0])} E6 F600\n\n;SET_FILAMENT_SENSOR SENSOR=extruder ENABLE=1\n\nM117 [input_filename_base]\nG1 Z1 F3000\n\nM221 S110 ;flow 110%\n",
+    "name": "Leapgrog_BOLT_Klipper - 0.4 nozzle  - T0",
+    "print_host": "192.168.0.3",
+    "printable_area": [
+        "0x0",
+        "268x0",
+        "268x310",
+        "0x310"
+    ],
+    "printable_height": "160",
+    "printer_settings_id": "Leapgrog_BOLT_Klipper - 0.4 nozzle  - T0",
+    "retraction_length": [
+        "0.6"
+    ],
+    "support_air_filtration": "0",
+    "support_chamber_temp_control": "0",
+    "use_firmware_retraction": "1",
+    "version": "1.8.0.0",
+    "wipe": [
+        "0"
+    ],
+    "z_hop": [
+        "0"
+    ]
+}

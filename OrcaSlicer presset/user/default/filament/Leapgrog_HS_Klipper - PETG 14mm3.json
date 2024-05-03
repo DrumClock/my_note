@@ -1,0 +1,31 @@
+{
+    "fan_max_speed": [
+        "100"
+    ],
+    "fan_min_speed": [
+        "50"
+    ],
+    "filament_max_volumetric_speed": [
+        "14"
+    ],
+    "filament_settings_id": [
+        "Leapgrog_HS_Klipper - PETG 14mm3"
+    ],
+    "from": "User",
+    "inherits": "My Generic PETG",
+    "is_custom_defined": "0",
+    "name": "Leapgrog_HS_Klipper - PETG 14mm3",
+    "nozzle_temperature": [
+        "240"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "240"
+    ],
+    "slow_down_layer_time": [
+        "3"
+    ],
+    "slow_down_min_speed": [
+        "60"
+    ],
+    "version": "1.8.0.0"
+}
