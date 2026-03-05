@@ -3,3 +3,152 @@ V Jinja2 platí zkrácené vyhodnocení (short-circuit evaluation):
 A or B — pokud je A True, B se vůbec nevyhodnocuje
 A and B — pokud je A False, B se vůbec nevyhodnocuje
 
+#######################################################################################################################
+printer['gcode_macro VARIABLE']
+
+ {% set tool_nr = ( tool_name.lstrip("extruder") if tool_name.lstrip("extruder")|length != 0 else 0 )|int %}
+ {% set tool_name = 'extruder' if tool_nr|int == 0 else 'extruder%s'% tool_nr|string %}
+   
+#######################################################################################################################
+
+ # SET_GCODE_VARIABLE MACRO=<macro_name> VARIABLE=<name> VALUE=<value>
+ " vzor pto _INIT_ makra "
+ 
+ {% set macro_name = "VARIABLE" %}  # macro_name
+ {% set name = "dual_carriage" %}  # variable name
+ {% set init = { } %}         # default value   
+ 
+ {% set _dummy = init.update( { } ) %} 
+ {% set _dummy = init.update({ 'motion': [name] })  if init.motion is not defined  else  init.motion.append(name) %}
+ {% set _dummy = init.update({ 'current': {stepper : run }})  if init.current is not defined else init.current.update( {stepper : run} ) %}  
+
+ 
+  SET_GCODE_VARIABLE MACRO={macro_name} VARIABLE={name} VALUE="{init}"
+  
+#######################################################################################################################
+  update variable bez u'extruder' 
+  nutno použít  extruder.lower() nikoliv extruder|lower
+  
+  {% set extruder = params.EXTRUDER|default('extruder') %}  
+  {% if extruder|lower in printer.heaters.available_heaters %}   
+  {% set _dummy = init.update(  { tool : extruder.lower() } )  %}
+
+#######################################################################################################################
+
+ " převed params True/False na boolean hodnotu "
+ {% set mode = true if params.WAIT|default(false)|lower == 'true' else false  %}   
+ 
+#######################################################################################################################
+
+ {% set info = "Heating is ON." %}  
+ {% set msg  = "%s  Printer cannot be switched off !" % info %}
+  RESPOND MSG=" '{msg}' "  
+  
+#######################################################################################################################
+
+  {% set hotend = params.T|int %}    # T= 0 | 1 | 2 | 3
+  {% set hotend_map = {0: 0, 1: 0} %}
+  {% set new_hotend = hotend_map.get(hotend, 9999) %}  #new_hotend  = 0 | 0 | 9999 | 99999
+
+#######################################################################################################################
+
+ ###  check/set actual carriage according to the location of the 'extruder' on the 'toolhead'
+ 
+    {% set ns=namespace(act_carriage=0) %}
+    {% for index in user_vars.toolhead %}  
+      {% if printer.toolhead.extruder in user_vars.toolhead[index] %}
+        {% set ns.act_carriage = index %}    
+      {% endif %}
+    {% endfor %}    
+    
+   {action_respond_info("carriage = %s " % ns.act_carriage)}   
+   
+   ###  
+   {action_respond_info("carriage = %s " % ns.act_carriage) if printer.save_variables.variables.dump_list }   # list = True/False
+   {action_respond_info("carriage = %s " % ns.act_carriage) if printer.save_variables.variables.dump_list else action_respond_info("disable") }  
+    
+
+#######################################################################################################################
+
+------------------------ stejná funkce více variant -------------------------
+1.
+  {% if sensor_type == 'temperature_mcu' %}
+    {% set icon = 'mcu'  %}
+  {% elif sensor_type == 'temperature_host' %}
+    {% set icon = 'mcu' %} 
+  {% else %}
+    {% set icon = 'temp' %} 
+  {% endif %}
+
+2.
+  {% set icon = 'mcu' if sensor_type == 'temperature_mcu' 
+            else 'mcu' if sensor_type == 'temperature_host' 
+            else 'temp' %}
+            
+3.
+  {% set icon = 'mcu' if sensor_type in ['temperature_mcu','temperature_host'] else 'temp' %}
+  
+  
+ 
+------------------------ stejná funkce dve varianty -------------------------
+1.
+  {% if 'gcode_macro MULTI_HOTEND' in  printer 
+     and act_extruder != user_vars.multi_hotend[act_carriage] 
+     and printer['virtual_sdcard'].is_active == true %}
+   {% set  act_extruder = user_vars.multi_hotend[act_carriage]  %}   
+  {% endif %}   
+  
+  
+2.
+  {% set act_extruder = user_vars.multi_hotend[act_carriage] 
+      if 'gcode_macro MULTI_HOTEND' in printer 
+       and act_extruder != user_vars.multi_hotend[act_carriage] 
+       and printer['virtual_sdcard'].is_active == true 
+      else printer.toolhead.extruder %}   
+
+   
+#######################################################################################################################
+
+# tool = {'extruder':0, 'extruder1':0, 'extruder2':1, 'extruder3':1 }
+# head_0 = " extruder , extruder1 "
+# head_1 = " extruder2 , extruder3 "
+ 
+  {% set ns=namespace(head_0=[], head_1=[])%}
+      
+  {% for extruder in  tool  %} 
+   {% if tool[extruder] == 0  %}
+     {% set _dummy = ns.head_0.append(extruder)  %} 
+   {% elif tool[extruder] == 1  %}
+     {% set _dummy = ns.head_1.append(extruder)  %}
+   {% endif %}   
+ {% endfor %} 
+ 
+# you now have to lists that you can use anywhere 
+# if you need a string output do 
+
+{% set head_0 = ns.head_0|join(",") %}  
+{% set head_1 = ns.head_1|join(",") %}  
+
+#######################################################################################################################
+
+------------------------ stejná funkce dve varianty -------------------------
+1.
+  ### Activate tool / carriage / gantry   
+  {% if 'dual_carriage' in printer['motion_report'].steppers %}
+    ACTIVATE_CARRIAGE  EXTRUDER={target_extruder}
+  {% elif printer.configfile.settings['printer'].kinematics == 'dualgantry_cartesian' %}  
+    ACTIVATE_GANTRY  EXTRUDER={target_extruder}
+  {% else %}  
+    ACTIVATE_TOOL EXTRUDER={target_extruder}
+  {% endif %}   
+
+2.
+  {%  set systems = 'CARRIAGE' if 'dual_carriage' in printer['motion_report'].steppers
+           else  'GANTRY'   if   printer.configfile.settings['printer'].kinematics == 'dualgantry_cartesian'  
+           else  'TOOL'  %}  
+         
+          ACTIVATE_{systems}  EXTRUDER={target_extruder}
+
+#######################################################################################################################
+
+
