@@ -1,0 +1,5 @@
+V Jinja2 platí zkrácené vyhodnocení (short-circuit evaluation):
+
+A or B — pokud je A True, B se vůbec nevyhodnocuje
+A and B — pokud je A False, B se vůbec nevyhodnocuje
+
